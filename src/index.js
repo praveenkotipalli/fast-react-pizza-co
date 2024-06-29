@@ -1,51 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-const pizzaData = [
-  {
-    name: "Focaccia",
-    ingredients: "Bread with italian olive oil and rosemary",
-    price: 6,
-    photoName: "pizzas/focaccia.jpg",
-    soldOut: false,
-  },
-  {
-    name: "Pizza Margherita",
-    ingredients: "Tomato and mozarella",
-    price: 10,
-    photoName: "pizzas/margherita.jpg",
-    soldOut: false,
-  },
-  {
-    name: "Pizza Spinaci",
-    ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
-    price: 12,
-    photoName: "pizzas/spinaci.jpg",
-    soldOut: false,
-  },
-  {
-    name: "Pizza Funghi",
-    ingredients: "Tomato, mozarella, mushrooms, and onion",
-    price: 12,
-    photoName: "pizzas/funghi.jpg",
-    soldOut: false,
-  },
-  {
-    name: "Pizza Salamino",
-    ingredients: "Tomato, mozarella, and pepperoni",
-    price: 15,
-    photoName: "pizzas/salamino.jpg",
-    soldOut: true,
-  },
-  {
-    name: "Pizza Prosciutto",
-    ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
-    price: 18,
-    photoName: "pizzas/prosciutto.jpg",
-    soldOut: false,
-  },
-];
+// const pizzaData = [
+//   {
+//     name: "Focaccia",
+//     ingredients: "Bread with italian olive oil and rosemary",
+//     price: 6,
+//     photoName: "pizzas/focaccia.jpg",
+//     soldOut: false,
+//   },
+//   {
+//     name: "Pizza Margherita",
+//     ingredients: "Tomato and mozarella",
+//     price: 10,
+//     photoName: "pizzas/margherita.jpg",
+//     soldOut: false,
+//   },
+//   {
+//     name: "Pizza Spinaci",
+//     ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
+//     price: 12,
+//     photoName: "pizzas/spinaci.jpg",
+//     soldOut: false,
+//   },
+//   {
+//     name: "Pizza Funghi",
+//     ingredients: "Tomato, mozarella, mushrooms, and onion",
+//     price: 12,
+//     photoName: "pizzas/funghi.jpg",
+//     soldOut: false,
+//   },
+//   {
+//     name: "Pizza Salamino",
+//     ingredients: "Tomato, mozarella, and pepperoni",
+//     price: 15,
+//     photoName: "pizzas/salamino.jpg",
+//     soldOut: true,
+//   },
+//   {
+//     name: "Pizza Prosciutto",
+//     ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
+//     price: 18,
+//     photoName: "pizzas/prosciutto.jpg",
+//     soldOut: false,
+//   },
+// ];
+
+//OR
+
+// const pizzaData = fetch("https://pizza-api-2-fd1z.onrender.com/api/v1/pizzas")
+//   .then((response) => response.json())
+//   .then((data) => setPizzas(data))
+//   .catch((error) => setError(error));
 
 function Header() {
   return (
@@ -74,6 +81,26 @@ function Pizza(props) {
 }
 
 function Menu() {
+  const [pizzaData, setPizzaData] = useState([]);
+
+  useEffect(() => {
+    const fetchPizzaData = async () => {
+      try {
+        const response = await fetch(
+          "https://pizza-api-3-158s.onrender.com/api/v1/pizzas"
+        );
+        const data = await response.json();
+
+        setPizzaData(data.data.pizzas);
+        console.log(data.data.pizzas);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    };
+
+    fetchPizzaData();
+  }, []);
+
   const pizzas = pizzaData;
   // const pizzas = [];
   const numPizzas = pizzas.length;
@@ -95,7 +122,7 @@ function Menu() {
           <ul className="pizzas">
             {pizzas.map((el) => (
               <Pizza
-                key={el.name}
+                key={el.id}
                 pizzaObj={el}
                 // name={el.name}
                 // photoName={el.photoName}
@@ -139,8 +166,9 @@ function App() {
 
 function Footer() {
   const hour = new Date().getHours();
+  console.log(hour);
   const openHour = 1;
-  const closeHour = 12;
+  const closeHour = 24;
   const isOpen = hour >= openHour && hour <= closeHour;
   console.log(isOpen);
 
